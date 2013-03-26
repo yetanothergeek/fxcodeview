@@ -1,0 +1,146 @@
+FXCodeView is a C/C++ source code viewer and C++ class browser. It was
+designed primarily for use with the Fox GUI toolkit, but may also be
+useful for general-purpose code browsing. It uses the "Exuberant Ctags"
+program as its backend, check that you have a current version of ctags
+installed before running FXCodeView.
+
+
+
+To start up the program, specify any directories you want to
+index on the command line, for example:
+
+  % fxcv /usr/include/fox-1.7 /usr/src/fox-1.7.26/lib /path/to/your/project ...
+
+The command above will start the program in "server" mode, and create
+a UNIX domain socket where it "listens" for additional requests.
+
+Note that the specified paths do not need to be absolute, but they must
+contain at least one slash, so the program will recognize them as a directory
+and not a class name.
+
+
+
+Once the server is running you can make a client request by running the
+program again, this time passing the name of a class on the command line.
+
+For example:
+  % fxcv FXString
+
+The command above will cause the already-running instance of fxcv to
+jump to the declaration of the FXString class. (Client requests are
+probably most useful when interacting with an external text editor.)
+
+
+
+Of course you can also navigate between classes, files, etc. from within the
+code browser itself. The left-handle panel contains four tabs:
+
+ * List:
+     The "List" tab contains a list of any public classes and structs found in
+     the startup directories. Some namespaces may also be listed, these are 
+     distinguished by the @ symbol in their listing, 
+     For instance:  MyNameSpace@MyHeader.H
+
+ * Tree:
+     The "Tree" tab contains basically the same information as the list does,
+     only the items in the tree are arranged in a heirarchical structure showing
+     the inheritance of each class. The list and the tree are synchronized, i.e. 
+     selecting something in the tree will cause it to be selected in the list,
+     and vice-versa.
+
+ * Files:
+     The "Files" tab displays drop-down box containing a list of all directories
+     that were indexed at startup. Selecting a directory from the drop-down box
+     will show a listing of all source and header files found in that directory.
+
+ * Search:
+      The "Search" tab will search through all identifiers found in the startup
+      directories. Each item shown in the resulting list shows the kind of item:
+      (F) for function, (P) for prototype, (E) for enum, etc. along with its
+      name and location in the format "identifier@filename".
+      
+
+At the top of the left-handle panel you will see a "Find" box, this can be used
+to perform a quick incremental search of the active tab's contents.
+
+Along the bottom of the window is a row of buttons showing a "linear" view of 
+the class inheritence. Clicking one of the buttons will select the given
+ancestor of a class without losing track of the overall lineage.
+
+When an class is selected in one the tabs, its header file's contents are loaded
+into the file viewer in the lower right-hand panel, and the "ctags" program is 
+invoked again to gather more specific information about the selected class.
+This information is shown in the tabs of the upper right-hand panel:
+
+ * Methods:
+    This tab lists any public or protected methods of the selected class, along
+    with its constructor and destructor.
+
+ * Other:
+    This tab lists additional members of the class. It might also contain other
+    information that may or may not be related to the class, but was found in
+    the same public header.
+
+If you select a file from the "Files" tab (rather than a class from the "List" or
+"Tree" tab) the ctags program is invoked to gather information about that file.
+The file is loaded into the viewer, and the "Methods" and "Other" tabs will show
+information similar to that described above. The lists here might contain a lot
+more information, since the entire file is tagged rather than a single class.
+This is more suitable when you are interested in functions, macros, and other 
+data structures besides just C++ classes. Hence it is also better for viewing 
+plain C files.
+
+The right-hand panel also contains a "Find" box that searches the "Description"
+field of the active tab. If the "Anchored" checkbox is checked, the search will
+only match the beginning of the descripion; if unchecked, the search will match
+on any part of the description string.
+
+
+When an item such as a function prototype or method declaration is selected in
+the upper right-hand panel, the program checks to see if an implementation of
+the item is available in one of the other source files. If it finds one, the 
+"View Source" button will be enabled and can be used to toggle the viewer 
+between the header and source files.
+
+
+
+The "Open" button tries to open the current file in your favorite text editor.
+(FXiTe of course :-) By default fxcv will check for a few popular editors, but
+you can specify your own command in the $FXCV_EDITOR environment variable.
+This variable should contain the editor command and also can contain a couple
+of printf-style escape sequences:
+
+  %s will be replaced with the name of the file.
+  %d will be replaced with the current line number.
+
+
+For example, you might set up the environment something like this:
+
+  export FXCV_EDITOR="adie --line %d %s"
+
+
+The "Open" button expects to invoke a GUI-style editor, if you want to use a 
+console-style editor, you might need to point $FXCV_EDITOR at a shell script
+that can properly set up a terminal to run the editor.
+
+
+
+If the environment variable $XDG_RUNTIME_DIR is set, the UNIX domain socket
+that is opened at startup will be created in that directory, otherwise it
+will be created in your $HOME directory. The socket is named ".fxcv.uds"
+by default, but if the $FXCV_SOCKET environment variable is set, that name
+will be used instead. This is useful if you want to run more than one instance
+of FXCodeView at a time.
+
+
+
+This program is still in the early stages of development, so it is entirely
+possible that you might encounter some nasty bugs or find some missing feature
+that you just can't live without. But the beautiful thing is that since it is
+open source and was designed primarily for FOX developers, you are free to
+hack away on it, and send me your patch!
+
+Thanks, and enjoy the ride!
+
+ - Jeff
+

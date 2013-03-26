@@ -1,0 +1,15 @@
+-w /try/me/fox/fxcodeview/src/main.cpp:149
+-w /try/me/fox/fxcodeview/src/fxcv.cpp:567
+-w /try/me/fox/fxcodeview/src/fxcv.h:135
+-w /try/me/fox/fxcodeview/src/tagger.cpp:160
+-w /try/me/fox/fxcodeview/src/tagger.h:51
+-w /try/me/fox/fxcodeview/src/taggerbase.cpp:398
+-w /try/me/fox/fxcodeview/src/taggerbase.h:177
+-w /try/me/fox/fxcodeview/src/widgets.cpp:1
+-w /try/me/fox/fxcodeview/src/widgets.h:1
+-w /try/me/fox/fxcodeview/src/Makefile.am:19
+-w /try/me/fox/fxcodeview/src/desclistdlg.h:1
+-w /try/me/fox/fxcodeview/src/path_dlg.cpp:18
+-w /try/me/fox/fxcodeview/src/path_dlg.h:7
+-w /home/redd/.config/fxite/desk1/tools/macros/00.utils/01.save-session.lua:13
+-w /home/redd/.config/fxite/desk1/tools/macros/00.utils/01.save-session.lua:13
