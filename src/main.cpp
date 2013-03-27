@@ -155,6 +155,7 @@ int main(int argc, char *argv[])
       );
     }
   } else {
+    MainWin::Splash(&a);
     if (!TagParser::DirList().no()) {
       TagParser::SetDefaultSearchPaths();
     }

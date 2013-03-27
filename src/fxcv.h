@@ -199,6 +199,7 @@ public:
   MainWin(FXApp* a);
   virtual void create();
   virtual ~MainWin();
+  static void Splash(FXApp*a);
 };
 
 #endif

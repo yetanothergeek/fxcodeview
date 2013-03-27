@@ -1010,12 +1010,40 @@ long MainWin::onSetCodeFont(FXObject*o, FXSelector sel, void*p)
 
 
 
+void MainWin::Splash(FXApp*a)
+{
+  static FXSplashWindow*splash = NULL;
+  if (a) {
+    FXIcon*ico=new FXXPMIcon(a,fxcv_xpm,0,IMAGE_OWNED);
+    ico->scale(128,128);
+    splash = new FXSplashWindow(a,ico,SPLASH_SIMPLE|SPLASH_OWNS_ICON,ONE_SECOND*15);
+    a->getRootWindow()->create();
+    FXint SplashX=(a->getRootWindow()->getWidth()-128)/2;
+    FXint SplashY=(a->getRootWindow()->getHeight()-128)/2;
+    a->getRootWindow()->destroy();
+    splash->setX(SplashX);
+    splash->setY(SplashY);
+    splash->show(PLACEMENT_SCREEN);
+  } else {
+    delete splash;
+    splash=NULL;
+  }
+}
+
+
+
+
 static const char*guireg="GUI";
 
 
 void MainWin::create()
 {
   FXMainWindow::create();
+
+  BuildClassTree();
+  UpdateDirBox();
+  Splash(NULL);
+
   classfinder->setFocus();
 
   FXRegistry *reg=&(getApp()->reg());
@@ -1262,7 +1290,5 @@ MainWin::MainWin(FXApp* a):MainWinWithClipBrd(a, APP_NAME, NULL, NULL,DECOR_ALL,
   tp=new TagParser(this,classtree,classlist,memberlist,otherlist);
   status_label=new FXLabel(statbar,FXString::null);
   SetPadLRTB(status_label,0,0,0,0);
-  BuildClassTree();
-  UpdateDirBox();
 }
 
