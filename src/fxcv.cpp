@@ -53,6 +53,7 @@ FXDEFMAP(MainWin) MainWinMap[]={
   FXMAPFUNC(SEL_COMMAND, MainWin::ID_FIND_NEXT_MEMBER, MainWin::onEditTimer),
   FXMAPFUNC(SEL_COMMAND, MainWin::ID_FIND_PREV_MEMBER, MainWin::onEditTimer),
   FXMAPFUNC(SEL_COMMAND, MainWin::ID_IPC_EXEC,         MainWin::onIpcExec),
+  FXMAPFUNC(SEL_COMMAND, MainWin::ID_SET_CODE_FONT,    MainWin::onSetCodeFont),
   FXMAPFUNC(SEL_COMMAND, MainWin::ID_SOURCE_BUTTON,    MainWin::onSourceButton),
   FXMAPFUNC(SEL_COMMAND, MainWin::ID_OPEN_BUTTON,      MainWin::onOpenButton),
   FXMAPFUNC(SEL_COMMAND, MainWin::ID_PICK_DIRECTORY,   MainWin::onPickDirectory),
@@ -977,6 +978,38 @@ long MainWin::onEditPathList(FXObject*o, FXSelector sel, void*p)
 }
 
 
+
+void MainWin::SetCodeFont(const FXString &name, FXint size)
+{
+  FXFont *fnt=new FXFont(getApp(),name);
+  fnt->create();
+  FXFontDesc desc=fnt->getActualFontDesc();
+  desc.size=size;
+  fnt->destroy();
+  fnt->setFontDesc(desc);
+  fnt->create();
+  hdr_view->setFont(fnt);
+  src_view->setFont(fnt);
+  delete mono;
+  mono=fnt;
+}
+
+
+
+long MainWin::onSetCodeFont(FXObject*o, FXSelector sel, void*p)
+{
+  FXFontDialog dlg(this, "Set source viewer font");
+  ((MyFontDlg*)&dlg)->setup();
+  dlg.setFontDesc(hdr_view->getFont()->getActualFontDesc());
+  if (dlg.execute(PLACEMENT_OWNER)) {
+    FXFontDesc desc=dlg.getFontDesc();
+    SetCodeFont(desc.face,desc.size);
+  }
+  return 1;
+}
+
+
+
 static const char*guireg="GUI";
 
 
@@ -1014,11 +1047,10 @@ void MainWin::create()
   otherlist->setHeaderSize(2,incr*15);
   otherlist->setHeaderSize(3,incr*55);
 
-  mono=new FXFont(getApp(), "courier");
-  mono->create();
-  hdr_view->setFont(mono);
+  mono=NULL;
+  SetCodeFont(reg->readStringEntry(guireg,"font.name","courier"),reg->readIntEntry(guireg,"font.size",100));
+
   hdr_view->setHiliteBackColor(FXRGB(255,255,128));
-  src_view->setFont(mono);
   src_view->setHiliteBackColor(FXRGB(255,255,128));
 
   if (initclass.empty()&&(classlist->getNumItems()>0)) {
@@ -1040,8 +1072,6 @@ MainWin::~MainWin()
 {
   ClearClassTree();
   delete tp;
-  mono->destroy();
-  delete mono;
   FXRegistry *reg=&(getApp()->reg());
   reg->writeIntEntry(guireg,"window.width", getWidth());
   reg->writeIntEntry(guireg,"window.height", getHeight());
@@ -1052,7 +1082,11 @@ MainWin::~MainWin()
   reg->writeIntEntry(guireg,"split.height", vsplit->getSplit(0));
   reg->writeIntEntry(guireg,"tabs.classes", classes_tabs->getCurrent());
   reg->writeIntEntry(guireg,"tabs.members", members_tabs->getCurrent());
+  reg->writeIntEntry(guireg,"font.size", mono->getActualSize());
+  reg->writeStringEntry(guireg,"font.name", mono->getActualName().text());
   reg->write();
+  mono->destroy();
+  delete mono;
 }
 
 
@@ -1214,6 +1248,7 @@ MainWin::MainWin(FXApp* a):MainWinWithClipBrd(a, APP_NAME, NULL, NULL,DECOR_ALL,
   Styler::InitStyles();
   hframe=new FXHorizontalFrame(vframe,LAYOUT_FILL_X);
   SetPadLRTB(hframe,2,2,0,2);
+  new FXButton(hframe, "A",NULL,this,ID_SET_CODE_FONT);
   openbutton=new FXButton(hframe, "open",NULL,this,ID_OPEN_BUTTON);
   sourcebutton=new FXButton(hframe, "view source",NULL,this,ID_SOURCE_BUTTON);
   sourcebutton->disable();

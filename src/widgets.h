@@ -90,3 +90,26 @@ public:
 
 
 
+
+// The source code viewer uses various font weights and styles
+// internally, so we only allow the user to select a font with 
+// normal weight and regular style. This class simply disables
+// those options.
+class MyFontSel:public FXFontSelector {
+public:
+  void setup() {
+    weightlist->disable();
+    weightlist->setBackColor(getApp()->getBaseColor());
+    stylelist->disable();
+    stylelist->setBackColor(getApp()->getBaseColor());
+    weight->setBackColor(getApp()->getBaseColor());
+    style->setBackColor(getApp()->getBaseColor());
+  }
+};
+
+
+
+class MyFontDlg: public FXFontDialog {
+public:
+  void setup() { ((MyFontSel*)fontbox)->setup(); }
+};

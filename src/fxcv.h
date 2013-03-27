@@ -84,6 +84,8 @@ enum {
   SRCH_WHOLEWORD = 8,
 };
 
+
+
 class MainWin : public MainWinWithClipBrd {
   FXDECLARE(MainWin)
 protected:
@@ -108,6 +110,8 @@ protected:
   }
   void LoadLocation(Location*locn, bool wholefile=false);
   void UpdateDirBox();
+  void SetCodeFont(const FXString &name, FXint size);
+
 
   TagParser *tp;
   FXString hdrfile;
@@ -155,6 +159,7 @@ public:
   long onSearchAll(         FXObject*o, FXSelector sel, void*p);
   long onEditTimer(         FXObject*o, FXSelector sel, void*p);
   long onIpcExec(           FXObject*o, FXSelector sel, void*p);
+  long onSetCodeFont(       FXObject*o, FXSelector sel, void*p);
   long onSourceButton(      FXObject*o, FXSelector sel, void*p);
   long onOpenButton(        FXObject*o, FXSelector sel, void*p);
   long onPickDirectory(     FXObject*o, FXSelector sel, void*p);
@@ -180,6 +185,7 @@ public:
     ID_FIND_NEXT_CLASS,
     ID_FIND_PREV_CLASS,
     ID_IPC_EXEC,
+    ID_SET_CODE_FONT,
     ID_SOURCE_BUTTON,
     ID_OPEN_BUTTON,
     ID_PICK_DIRECTORY,
@@ -196,3 +202,4 @@ public:
 };
 
 #endif
+
