@@ -70,61 +70,8 @@ FXDEFMAP(MainWin) MainWinMap[]={
 FXIMPLEMENT(MainWin,MainWinWithClipBrd,MainWinMap,ARRAYNUMBER(MainWinMap))
 
 
-#include <X11/X.h>
-#include <X11/Xlib.h>
-#include <X11/Xproto.h>
-#include <X11/Xatom.h>
-
 const
 #include "fxcv.xpm"
-
-
-void SetupXAtoms(FXTopWindow*win, const char*class_name)
-{
-  FXIcon*ico=new FXXPMIcon(win->getApp(),fxcv_xpm,0,IMAGE_KEEP);
-  ico->create();
-  win->setIcon(ico);
-  Display*d=(Display*)(win->getApp()->getDisplay());
-  Atom net_wm_icon = XInternAtom(d, "_NET_WM_ICON", 0);
-  Atom cardinal = XInternAtom(d, "CARDINAL", False);
-  if (net_wm_icon&&cardinal) {
-    FXint w=ico->getWidth();
-    FXint h=ico->getHeight();
-    unsigned long *icon_buf=NULL;
-    FXint icon_buf_size=(w*h)+2;
-    icon_buf=(unsigned long*)malloc(icon_buf_size*sizeof(unsigned long));
-    FXint j=0;
-    icon_buf[j++]=w;
-    icon_buf[j++]=h;
-    FXint x,y;
-    for (y=0; y<h; y++) {
-      for (x=0; x<w; x++) {
-        FXColor px=ico->getPixel(x,y);
-        icon_buf[j++]=px?px:FXRGBA(255,255,255,0);
-      }
-    }
-    XChangeProperty(d, win->id(), net_wm_icon, cardinal, 32,
-      PropModeReplace, (const FXuchar*) icon_buf, icon_buf_size);
-    free(icon_buf);
-  }
-
-  Atom net_wm_pid = XInternAtom(d, "_NET_WM_PID", 0);
-  pid_t pid=FXProcess::current();
-  XChangeProperty(d, win->id(), net_wm_pid, cardinal, 32,
-    PropModeReplace, (const FXuchar*) &pid, sizeof(pid));
-  FXString hn=FXSystem::getHostName();
-  if (!hn.empty()) {
-    Atom wm_client_machine = XInternAtom(d, "WM_CLIENT_MACHINE", 0);
-    XChangeProperty(d, win->id(), wm_client_machine, XA_STRING, 8,
-      PropModeReplace, (const FXuchar*) hn.text(), hn.length());
-  }
-  FXString cn=class_name;
-  cn.append(".");
-  cn.append(APP_NAME);
-  Atom wm_class = XInternAtom(d, "WM_CLASS", 0);
-  XChangeProperty(d, win->id(), wm_class, XA_STRING, 8,
-    PropModeReplace, (const FXuchar*) cn.text(), cn.length());
-}
 
 
 static FXString initclass=FXString::null;
@@ -1089,8 +1036,10 @@ void MainWin::create()
                         (void*)(classfinder->getText().text()) );
 
   classes_tabs->setCurrent(reg->readIntEntry(guireg,"tabs.classes",0));
-
-  SetupXAtoms(this,"FXCodeView");
+  FXIcon*ico=new FXXPMIcon(getApp(),fxcv_xpm,0,IMAGE_KEEP);
+  ico->create();
+  setIcon(ico);
+  SetupXAtoms(this,"FXCodeView","FXCodeView");
   show(PLACEMENT_SCREEN);
 }
 
