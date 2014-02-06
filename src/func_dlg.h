@@ -24,14 +24,14 @@
 class ParamsDlg: public FXDialogBox {
 private:
   FXMatrix *mtx;
-  FXStringDict*dict;
+  FXStringDictionary*dict;
   MainWinWithClipBrd*mw;
 protected:
   FXDECLARE(ParamsDlg)
   ParamsDlg() {}
 public:
   long onEdit(FXObject*o, FXSelector sel, void*p);
-  ParamsDlg(MainWinWithClipBrd*owner, FXStringDict*d, const FXString &opt_names, const FXString &id_names);
+  ParamsDlg(MainWinWithClipBrd*owner, FXStringDictionary*d, const FXString &opt_names, const FXString &id_names);
   virtual FXuint execute(FXuint placement=PLACEMENT_OWNER);
   enum {
     ID_EDIT=FXDialogBox::ID_LAST,

@@ -95,7 +95,7 @@ protected:
   void ClearClassTree();
   void ClearList(FXIconList*list);
   void ClearLocationList(FXList*list);
-  void FindSourceFile(FXStringDict*dict);
+  void FindSourceFile(FXStringDictionary*dict);
   void ShowSource(const FXString &srcfile);
   void MakeBoxRed(FXTextField*box, bool iserror);
   bool SearchMatch(const FXString&needle, const FXString&haystack, FXRex*rx);

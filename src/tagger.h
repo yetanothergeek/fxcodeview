@@ -39,8 +39,8 @@ class TagParser: public TagParserBase {
   FXIconList*memberlist;
   FXIconList*otherlist;
   bool wholefile;
-  bool ParseClassTag(FXStringDict *dict, const FXString &thisclass);
-  bool ParseOtherTag(FXStringDict *dict);
+  bool ParseClassTag(FXStringDictionary *dict, const FXString &thisclass);
+  bool ParseOtherTag(FXStringDictionary *dict);
 public:
   TagParser(FXMainWindow*win, FXTreeList*clstree, FXList*clslist, FXIconList*members, FXIconList*others):
   TagParserBase(win, clstree, clslist) {

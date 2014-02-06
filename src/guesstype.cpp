@@ -224,7 +224,7 @@ static void StripQualifiers(FXString&line, const FXString &name, const FXString 
 
 
 
-void GetTypeInfo(FXStringDict *dict, const FXString &name, const FXString &kind, const FXString &contents)
+void GetTypeInfo(FXStringDictionary *dict, const FXString &name, const FXString &kind, const FXString &contents)
 {
   if (kind=="enumerator") {
     FXString type=Key("enum");

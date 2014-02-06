@@ -16,5 +16,5 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-void GetTypeInfo(FXStringDict*dict, const FXString&name, const FXString&kind, const FXString&contents);
+void GetTypeInfo(FXStringDictionary*dict, const FXString&name, const FXString&kind, const FXString&contents);
 

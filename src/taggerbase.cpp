@@ -77,10 +77,9 @@ TagParserBase::TagParserBase( FXMainWindow*win, FXTreeList*clstree, FXList*clsli
 
 
 //  Try to read a key from dict, return the result as FXString (or empty)
-const FXString TagParserBase::SafeKey(FXStringDict*dict, const char*key)
+const FXString TagParserBase::SafeKey(FXStringDictionary*dict, const char*key)
 {
-  const char*value=dict->find(key);
-  return value?value:FXString::null;
+  return dict->at(key);
 }
 
 
@@ -247,15 +246,15 @@ void TagParserBase::TransformItemData(FXTreeItem *item)
 // Ascii, so Ascii wins. Something like an anti-popularity contest.
 // But actually we should probably maintain a heirarchy of namespaces
 // instead of this kludge.
-class NumDict:public FXDict {
+class NumDict:public FXDictionary {
 public:
-  NumDict():FXDict(){}
+  NumDict():FXDictionary(){}
   void inc(const FXchar*k) {
     FXint v=find(k);
-    replace(k,(void*)(v+1));
+    at(k)=(void*)(v+1);
   }
   FXint find(const FXchar*k) {
-    return (FXint)((FXuval)FXDict::find(k));
+    return (FXint)((FXuval)FXDictionary::find(k));
   }
 };
 

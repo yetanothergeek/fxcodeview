@@ -176,7 +176,7 @@ long ParamsDlg::onEdit(FXObject*o, FXSelector sel, void*p)
   o->setPadBottom(b);
 
 
-ParamsDlg::ParamsDlg(MainWinWithClipBrd*owner, FXStringDict*d, const FXString &opt_names, const FXString &id_names):FXDialogBox(owner,FXString::null)
+ParamsDlg::ParamsDlg(MainWinWithClipBrd*owner, FXStringDictionary*d, const FXString &opt_names, const FXString &id_names):FXDialogBox(owner,FXString::null)
 {
   dict=d;
   mw=owner;

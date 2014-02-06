@@ -64,7 +64,7 @@ FXIMPLEMENT(TagParser,TagParserBase,TagParserMap,ARRAYNUMBER(TagParserMap))
 
 
 
-bool TagParser::ParseClassTag(FXStringDict *dict, const FXString &thisclass)
+bool TagParser::ParseClassTag(FXStringDictionary *dict, const FXString &thisclass)
 {
   if (Key("access")=="private") {return false;}
   FXString all=FXString::null;
@@ -114,13 +114,13 @@ bool TagParser::ParseClassTag(FXStringDict *dict, const FXString &thisclass)
       otherlist->appendItem(all,NULL,NULL,dict);
     }
   }
-  dict->replace("kind",kind.text());
+  dict->at("kind")=kind.text();
   return true;
 }
 
 
 
-bool TagParser::ParseOtherTag(FXStringDict *dict)
+bool TagParser::ParseOtherTag(FXStringDictionary *dict)
 {
   if (Key("class").empty() && Key("struct").empty()) {
     const FXString kind=Key("kind");
@@ -128,13 +128,13 @@ bool TagParser::ParseOtherTag(FXStringDict *dict)
       FXString name=Key("name").text();
       GetTypeInfo(dict,name,kind,contents);
       if ((Key("kind")=="prototype")) {
-        dict->replace("kind","function");
+        dict->at("kind")="function";
       }
       FXString all=FXString::null;
       if (name.find("operator ")==0) {
         name.erase(0,9);
         name.append(" ");
-        dict->replace("kind","operator");
+        dict->at("kind")="operator";
       }
       all.format( "%s\t%s\t%s\t%s%s",
         Key("access").text(),
@@ -161,7 +161,7 @@ long TagParser::onParseSingleHeader(FXObject*o, FXSelector sel, void*p)
 {
   FXString*s=(FXString*)p;
   if (FXSELTYPE(sel)==SEL_IO_EXCEPT) { return 1; }
-  FXStringDict *dict=new FXStringDict();
+  FXStringDictionary *dict=new FXStringDictionary();
   if (debug_ctags) { dict->insert("debug",s->text()); }
   dict->insert("name",s->section('\t',0).text());
   for (FXint i=3; i<=s->contains('\t'); i++) {

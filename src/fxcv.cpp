@@ -315,7 +315,7 @@ long MainWin::onSelectClass(FXObject*o, FXSelector sel, void*p)
 // When the user selects a function in the memberlist or otherlist, check
 // to see if the implementation is defined in a source file rather than
 // the header, and enable the "View Source" button if it is.
-void MainWin::FindSourceFile(FXStringDict*dict)
+void MainWin::FindSourceFile(FXStringDictionary*dict)
 {
   sourcebutton->disable();
   src_locns.clear();
@@ -359,7 +359,7 @@ void MainWin::FindSourceFile(FXStringDict*dict)
 long MainWin::onSelectMember(FXObject*o, FXSelector sel, void*p)
 {
   FXIconList*list=(FXIconList*)o;
-  FXStringDict*dict=(FXStringDict*)list->getItemData(list->getCurrentItem());
+  FXStringDictionary*dict=(FXStringDictionary*)list->getItemData(list->getCurrentItem());
   if (sel) {
     MakeBoxRed(memberfinder,false);
     memberfinder->setText(FXString::null);
@@ -397,7 +397,7 @@ long MainWin::onSelectMember(FXObject*o, FXSelector sel, void*p)
 long MainWin::onActivateMember(FXObject*o, FXSelector sel, void*p)
 {
   FXIconList*list=(FXIconList*)o;
-  FXStringDict*dict=(FXStringDict*)list->getItemData(list->getCurrentItem());
+  FXStringDictionary*dict=(FXStringDictionary*)list->getItemData(list->getCurrentItem());
   FXString opt_names = FXString::null;
   FXString id_names = FXString::null;
   if (dict) {
@@ -688,7 +688,7 @@ long MainWin::onSelectResult(FXObject*o, FXSelector sel, void*p)
   FXIconList*lists[]={memberlist,otherlist,NULL};
   for (FXIconList**list=lists; *list; list++) {
     for (FXint imemb=0; imemb<(*list)->getNumItems(); imemb++) {
-      FXStringDict*dict=(FXStringDict*)(*list)->getItemData(imemb);
+      FXStringDictionary*dict=(FXStringDictionary*)(*list)->getItemData(imemb);
       if (Key("line").toInt()==locn->line) {
         FXString classname=Key("class");
         TagParser::StripNamespace(classname);
@@ -868,7 +868,7 @@ void MainWin::BuildClassTree()
 void MainWin::ClearList(FXIconList*list)
 {
   for (FXint i=0; i<list->getNumItems(); i++) {
-    delete (FXStringDict*)(list->getItemData(i));
+    delete (FXStringDictionary*)(list->getItemData(i));
   }
   list->clearItems();
 }

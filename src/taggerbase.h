@@ -165,7 +165,7 @@ public:
   long onParseAllSources(FXObject*o, FXSelector sel, void*p);
   static void SetDefaultSearchPaths();
   static FXint StripNamespace(FXString &s);
-  static const FXString SafeKey(FXStringDict*dict, const char*key);
+  static const FXString SafeKey(FXStringDictionary*dict, const char*key);
   void CreateTreeItems();
   void LocationToFullPath(FXString &file, Location*locn);
   const FXString &LocationToFilename(Location*locn);
