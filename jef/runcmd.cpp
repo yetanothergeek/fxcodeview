@@ -1,6 +1,6 @@
 /*
   FXiTe - The Free eXtensIble Text Editor
-  Copyright (c) 2009-2011 Jeffrey Pohlmeyer <yetanothergeek@gmail.com>
+  Copyright (c) 2009-2013 Jeffrey Pohlmeyer <yetanothergeek@gmail.com>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License version 3 as
@@ -120,7 +120,7 @@ bool CmdIO::checkCurrDir()
 
 
 
-bool CmdIO::filter(const char *command, const FXString &input, FXString &output, bool*canceler)
+bool CmdIO::filter(const char *command, const FXString &input, FXString &output)
 {
   SendString=input.text();
   remaining=SendString.length();
@@ -128,8 +128,8 @@ bool CmdIO::filter(const char *command, const FXString &input, FXString &output,
   target=NULL;
   ensure_final_newline=false;
   if (!checkCurrDir()) { return false; }
-  bool success=run(command,canceler);
-  if (canceler && *canceler) {
+  bool success=run(command);
+  if (IsCancelled()) {
     return false;
   }
   output=RecvString.text();
@@ -142,13 +142,13 @@ bool CmdIO::filter(const char *command, const FXString &input, FXString &output,
 
 
 
-bool CmdIO::lines(const char *command, FXObject *trg, FXSelector sel, bool*canceler, bool multiline)
+bool CmdIO::lines(const char *command, FXObject *trg, FXSelector sel, bool multiline)
 {
   message=sel;
   target=trg;
   multiline_mode=multiline;
   ensure_final_newline=true;
   if (!checkCurrDir()) { return false; }
-  return run(command,canceler);
+  return run(command);
 }
 

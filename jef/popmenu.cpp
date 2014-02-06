@@ -1,6 +1,6 @@
 /*
   FXiTe - The Free eXtensIble Text Editor
-  Copyright (c) 2009-2012 Jeffrey Pohlmeyer <yetanothergeek@gmail.com>
+  Copyright (c) 2009-2013 Jeffrey Pohlmeyer <yetanothergeek@gmail.com>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License version 3 as
@@ -27,7 +27,7 @@ FXIMPLEMENT(PopUpMnuCmd,FXMenuCommand,PopUpMnuCmdMap,ARRAYNUMBER(PopUpMnuCmdMap)
 
 PopUpMnuCmd::PopUpMnuCmd(FXComposite* p,const FXString& text,FXIcon* ic,FXObject* tgt,FXSelector sel):
      FXMenuCommand(p,text,ic,tgt,sel), CreationTime(FXThread::time())
-{ 
+{
   CreationTime=FXThread::time();
 }
 

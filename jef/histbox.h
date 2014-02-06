@@ -1,6 +1,6 @@
 /*
   FXiTe - The Free eXtensIble Text Editor
-  Copyright (c) 2009-2011 Jeffrey Pohlmeyer <yetanothergeek@gmail.com>
+  Copyright (c) 2009-2013 Jeffrey Pohlmeyer <yetanothergeek@gmail.com>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License version 3 as
@@ -38,7 +38,7 @@ public:
 /*
   When a ClipTextField object is destroyed and it "owns" the clipoard, it searches
   up through the chain of "owner" windows trying to find a window that inherits
-  from "MainWinWithClipBrd". If found, it tries to hand off the clipboard data  
+  from "MainWinWithClipBrd". If found, it tries to hand off the clipboard data
   by calling MainWinWithClipBrd::SaveClipboard().
 */
 class ClipTextField: public FXTextField {

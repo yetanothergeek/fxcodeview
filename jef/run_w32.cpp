@@ -1,6 +1,6 @@
 /*
   FXiTe - The Free eXtensIble Text Editor
-  Copyright (c) 2009-2011 Jeffrey Pohlmeyer <yetanothergeek@gmail.com>
+  Copyright (c) 2009-2013 Jeffrey Pohlmeyer <yetanothergeek@gmail.com>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License version 3 as
@@ -112,7 +112,21 @@ bool CreateChildProcess(FXMainWindow*win, FXString &cmdline, HANDLE StdIN_Rd, HA
     }
     FXString ext = cmdline[0]=='"'?cmdline.section('"',1):cmdline.section(' ',0);
     ext=FXPath::extension(ext).lower();
-    if ((!ext.empty())&&(ext!="exe")&&(ext!="bat")&&(ext!="com")) {
+    bool ispathext=false;
+    if (ext.empty()) {
+      ispathext=true;
+    } else {
+      ext.prepend('.');
+      FXString pathext=FXSystem::getEnvironment("PATHEXT").lower();
+      if ( pathext.empty() ) { pathext=".com;.exe;.bat;.cmd"; }
+      for (FXint i=0; i<=pathext.contains(';'); i++) {
+        if (pathext.section(';',i)==ext) {
+          ispathext=true;
+          break;
+        }
+      }
+    }
+    if (ispathext) {
       // If the file is not executable, run the associated application instead.
       cmdline.prepend("\" ");
       cmdline.prepend(exename);
@@ -151,7 +165,7 @@ static DWORD BytesAvail(HANDLE f, DWORD&status) {
 
 
 // Launch an external command
-bool CmdIO::run(const char *command, bool*canceler)
+bool CmdIO::run(const char *command)
 {
   stdinFD = stdoutFD = stderrFD = StdIN_Rd = StdOUT_Wr = StdERR_Wr = NULL;
   RecvString = ErrString = "";
@@ -181,7 +195,10 @@ bool CmdIO::run(const char *command, bool*canceler)
     SafeClose(StdIN_Rd);
     while (1) {
       app->runWhileEvents();
-      if (canceler && *canceler) { break; }
+      if (IsCancelled()) {
+        if (pi.hProcess) { TerminateProcess(pi.hProcess, 1); }
+        break;
+      }
       if (remaining>0) {
         FXuval sent=0;
         BOOL ok=WriteFile(stdinFD,SendString.text()+(SendString.length()-remaining),FXMIN(remaining,256),&sent,NULL);

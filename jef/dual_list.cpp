@@ -1,6 +1,6 @@
 /*
   FXiTe - The Free eXtensIble Text Editor
-  Copyright (c) 2009-2012 Jeffrey Pohlmeyer <yetanothergeek@gmail.com>
+  Copyright (c) 2009-2013 Jeffrey Pohlmeyer <yetanothergeek@gmail.com>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License version 3 as
@@ -54,7 +54,7 @@ void DualListForm::CheckCount()
   if (used_items->getNumItems()>0) {
     used_items->makeItemVisible(used_items->getCurrentItem());
     rem_btn->enable();
-  } else { 
+  } else {
     rem_btn->disable();
   }
   if (used_items->getNumItems()>0) {
@@ -140,13 +140,13 @@ void DualListForm::create()
 
 void DualListForm::PopulateAvail()
 {
-  
+
 }
 
 
 void DualListForm::PopulateUsed()
 {
-  
+
 }
 
 
