@@ -193,7 +193,7 @@ void TagParserBase::ReadClasses()
       if (de.isOpen()) {
         FXString fn;
         while (de.next(fn)) {
-          if (FXStat::isFile(fn) && rx.match(fn)) { cmd+=fn.text(); }
+          if (FXStat::isFile(fn) && (rx.search(fn,0,fn.length())>=0)) { cmd+=fn.text(); }
         }
         de.close();
         current_filename=FXString::null;
