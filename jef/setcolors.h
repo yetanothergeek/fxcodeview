@@ -17,21 +17,11 @@
 */
 
 
-#ifndef SHADY_TABS_H
-#define SHADY_TABS_H
-class ShadyTabs: public FXTabBook {
-private:
-  FXDECLARE(ShadyTabs);
-protected:
-  ShadyTabs(){}
-  void setTabColor(FXTabItem*t, bool active);
-  void UpdateTabs();
-public:
-  long onCmdOpenItem  ( FXObject* sender, FXSelector sel, void* p );
-  void setCurrent(FXint i, FXbool notify=false);
-  ShadyTabs(FXComposite* p,FXObject* tgt=NULL, FXSelector sel=0, FXuint opts=TABBOOK_NORMAL,
-              FXint x=0, FXint y=0, FXint w=0, FXint h=0, FXint pl=DEFAULT_SPACING,
-              FXint pr=DEFAULT_SPACING, FXint pt=DEFAULT_SPACING, FXint pb=DEFAULT_SPACING);
-};
-#endif
+#ifndef FXITE_SETCOLORS_H
+#define FXITE_SETCOLORS_H
 
+// Recursively apply application color settings to an existing
+// window and all of its children.
+void ApplyColorsToWindow(FXWindow* win);
+
+#endif

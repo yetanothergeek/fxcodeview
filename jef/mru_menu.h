@@ -16,22 +16,34 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#ifndef MRU_MENU_H
 
-#ifndef SHADY_TABS_H
-#define SHADY_TABS_H
-class ShadyTabs: public FXTabBook {
-private:
-  FXDECLARE(ShadyTabs);
-protected:
-  ShadyTabs(){}
-  void setTabColor(FXTabItem*t, bool active);
-  void UpdateTabs();
-public:
-  long onCmdOpenItem  ( FXObject* sender, FXSelector sel, void* p );
-  void setCurrent(FXint i, FXbool notify=false);
-  ShadyTabs(FXComposite* p,FXObject* tgt=NULL, FXSelector sel=0, FXuint opts=TABBOOK_NORMAL,
-              FXint x=0, FXint y=0, FXint w=0, FXint h=0, FXint pl=DEFAULT_SPACING,
-              FXint pr=DEFAULT_SPACING, FXint pt=DEFAULT_SPACING, FXint pb=DEFAULT_SPACING);
+# define MRU_MENU_H
+
+class RecentFilesMenu: public FXMenuPane {
+  private:
+    FXDECLARE(RecentFilesMenu)
+    RecentFilesMenu(){}
+  protected:
+    FXString group;
+    FXMenuCascade*casc;
+    FXApp*app;
+    bool created;
+    void add_item(const FXString &txt, bool prepended);
+    void append(const FXString &txt);
+    FXMenuCommand*find(const FXString &txt);
+  public:
+    long onItemClick(FXObject*o,FXSelector sel,void*p);
+    enum {
+      ID_ITEM_CLICK=FXMenuPane::ID_LAST,
+      ID_LAST
+    };
+    RecentFilesMenu(FXWindow *p, const FXString &caption, const FXString &groupname, FXObject *tgt, FXSelector sel);
+    ~RecentFilesMenu();
+    virtual void create();
+    void prepend(const FXString &txt);
+    void remove(const FXString &txt);
 };
+
 #endif
 

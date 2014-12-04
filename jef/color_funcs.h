@@ -16,22 +16,19 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#ifndef FXITE_COLOR_FUNCS_H
+#define FXITE_COLOR_FUNCS_H
 
-#ifndef SHADY_TABS_H
-#define SHADY_TABS_H
-class ShadyTabs: public FXTabBook {
-private:
-  FXDECLARE(ShadyTabs);
-protected:
-  ShadyTabs(){}
-  void setTabColor(FXTabItem*t, bool active);
-  void UpdateTabs();
+
+typedef char ColorName[8];
+
+class ColorFuncs {
 public:
-  long onCmdOpenItem  ( FXObject* sender, FXSelector sel, void* p );
-  void setCurrent(FXint i, FXbool notify=false);
-  ShadyTabs(FXComposite* p,FXObject* tgt=NULL, FXSelector sel=0, FXuint opts=TABBOOK_NORMAL,
-              FXint x=0, FXint y=0, FXint w=0, FXint h=0, FXint pl=DEFAULT_SPACING,
-              FXint pr=DEFAULT_SPACING, FXint pt=DEFAULT_SPACING, FXint pb=DEFAULT_SPACING);
+  static void RgbToHex(FXColor rgb, ColorName &clr);
+  static long HexToRGB(const char* rgb);
+  static void InvertColors(bool inverted);
+  static bool ColorsInverted();
 };
+
 #endif
 
