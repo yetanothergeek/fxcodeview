@@ -417,7 +417,7 @@ long MainWin::onActivateMember(FXObject*o, FXSelector sel, void*p)
                 if (compare(name,"ID_",3)==0) {
                   id_names.append(name+'\n');
                 } else {
-                  if (rx.match(name)) {
+                  if (rx.amatch(name)) {
                     opt_names.append(name+'\n');
                   }
                 }
@@ -777,7 +777,7 @@ long MainWin::onSetSearchOpt(FXObject*o, FXSelector sel, void*p)
 bool MainWin::SearchMatch(const FXString&needle, const FXString&haystack, FXRex*rx)
 {
   if (search_opts&SRCH_REGEX) { 
-    return (rx->match(haystack))?true:false;
+    return (rx->search(haystack,0,haystack.length())>=0)?true:false;
   } else {
     FXString hs=haystack;
     if (!(search_opts&SRCH_CASEMATCH)) { hs=hs.lower(); }
