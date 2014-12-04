@@ -1068,15 +1068,6 @@ MainWin::~MainWin()
 
 
 
-
-
-#define SetPadLRTB(o,l,r,t,b) \
-  o->setPadLeft(l); \
-  o->setPadRight(r); \
-  o->setPadTop(t); \
-  o->setPadBottom(b);
-
-
 #define SetSpaceHV(o,h,v) \
   o->setHSpacing(h); \
   o->setVSpacing(v);
