@@ -17,6 +17,7 @@ then
        'depcomp'  \
        'install-sh' \
        'missing' \
+       'compile' \
        'fxcv'
      do
        rm -f $DIR/$FILE
