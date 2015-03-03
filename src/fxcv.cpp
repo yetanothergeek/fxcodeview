@@ -33,6 +33,7 @@
 #include "tagger.h"
 #include "path_dlg.h"
 #include "func_dlg.h"
+#include "cfg_theme.h"
 
 #include "fxcv.h"
 
@@ -63,6 +64,9 @@ FXDEFMAP(MainWin) MainWinMap[]={
   FXMAPFUNC(SEL_COMMAND, MainWin::ID_CLEAR_FIELD,      MainWin::onClearField),
   FXMAPFUNC(SEL_COMMAND, MainWin::ID_EDIT_PATHLIST,    MainWin::onEditPathList),
   FXMAPFUNC(SEL_COMMAND, MainWin::ID_ANCESTRY_BTNS,    MainWin::onAncestryBtns),
+  FXMAPFUNC(SEL_COMMAND, MainWin::ID_SET_THEME,        MainWin::onSetTheme),
+  FXMAPFUNC(SEL_COMMAND, MainWin::ID_UPDATE_THEME,     MainWin::onUpdateTheme),
+  FXMAPFUNC(SEL_CHANGED, MainWin::ID_UPDATE_THEME,     MainWin::onUpdateTheme),
   FXMAPFUNC(SEL_DOUBLECLICKED, MainWin::ID_SELECT_MEMBER, MainWin::onActivateMember),
 };
 
@@ -926,6 +930,27 @@ long MainWin::onEditPathList(FXObject*o, FXSelector sel, void*p)
 
 
 
+long MainWin::onSetTheme(FXObject*sender, FXSelector sel, void*ptr)
+{
+  FXDialogBox dlg(this,"Set Theme");
+  FXVerticalFrame*vf=new FXVerticalFrame(&dlg,FRAME_NONE|LAYOUT_FILL);
+  SetPad(vf,0);
+  ThemeGUI*tg=new ThemeGUI(vf,this,ID_UPDATE_THEME);
+  FXHorizontalFrame*hf=new FXHorizontalFrame(vf,FRAME_NONE|LAYOUT_FILL_X);
+  SetPad(hf,0);
+  new FXButton(hf,"Close",NULL,&dlg,FXDialogBox::ID_ACCEPT,BUTTON_NORMAL|LAYOUT_CENTER_X);
+  dlg.execute(PLACEMENT_SCREEN);
+  return 1;
+}
+
+
+long MainWin::onUpdateTheme(FXObject*sender, FXSelector sel, void*ptr)
+{
+  Theme::apply(this);
+  return 1;
+}
+
+
 void MainWin::SetCodeFont(const FXString &name, FXint size)
 {
   FXFont *fnt=new FXFont(getApp(),name);
@@ -1183,8 +1208,11 @@ MainWin::MainWin(FXApp* a):MainWinWithClipBrd(a, APP_NAME, NULL, NULL,DECOR_ALL,
   hframe=new FXHorizontalFrame(hframe,LAYOUT_FILL|FRAME_NONE);
   SetPadLRTB(hframe,0,0,0,0);
 
-  path_btn=new FXButton(hframe, " Setup... ", NULL, this, ID_EDIT_PATHLIST, BUTTON_NORMAL|LAYOUT_RIGHT);
-  
+  mnu=new FXMenuPane(this);
+  new FXMenuCommand(mnu,"Search paths...",NULL,this,ID_EDIT_PATHLIST);
+  new FXMenuCommand(mnu,"Code Font...",NULL,this,ID_SET_CODE_FONT);
+  new FXMenuCommand(mnu,"Theme...",NULL,this,ID_SET_THEME);
+  mnu_btn=new FXMenuButton(hframe, "Options", NULL, mnu, BUTTON_NORMAL|LAYOUT_RIGHT);
   members_tabs=new FXTabBook(vframe,NULL,0,LAYOUT_FILL);
 
   new MyTabItem(members_tabs," methods ");
@@ -1216,7 +1244,6 @@ MainWin::MainWin(FXApp* a):MainWinWithClipBrd(a, APP_NAME, NULL, NULL,DECOR_ALL,
   Styler::InitStyles();
   hframe=new FXHorizontalFrame(vframe,LAYOUT_FILL_X);
   SetPadLRTB(hframe,2,2,0,2);
-  new FXButton(hframe, "A",NULL,this,ID_SET_CODE_FONT);
   openbutton=new FXButton(hframe, "open",NULL,this,ID_OPEN_BUTTON);
   sourcebutton=new FXButton(hframe, "view source",NULL,this,ID_SOURCE_BUTTON);
   sourcebutton->disable();

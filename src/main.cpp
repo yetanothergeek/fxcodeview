@@ -25,6 +25,7 @@
 #include "interproc.h"
 #include "tagger.h"
 #include "fxcv.h"
+#include "theme.h"
 
 
 
@@ -155,6 +156,7 @@ int main(int argc, char *argv[])
       );
     }
   } else {
+    Theme::init();
     MainWin::Splash(&a);
     if (!TagParser::DirList().no()) {
       TagParser::SetDefaultSearchPaths();
@@ -170,6 +172,7 @@ int main(int argc, char *argv[])
       cfgfile=xdgch.empty()?FXSystem::getHomeDirectory()+PATHSEPSTRING+".config":xdgch;
     }
     cfgfile+=PATHSEPSTRING+FXString(APP_NAME)+".rc";
+    Theme::done();
     ini_sort(cfgfile.text());
     return rv;
   }

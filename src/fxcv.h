@@ -147,7 +147,8 @@ protected:
   FXCheckButton *regex_chk;
   FXCheckButton *whole_chk;
   FXuint search_opts;
-  FXButton *path_btn;
+  FXMenuButton *mnu_btn;
+  FXMenuPane *mnu;
 public:
   static const FXString&InitialClass();
   static void InitialClass(const FXString&classname);
@@ -170,6 +171,8 @@ public:
   long onEditPathList(      FXObject*o, FXSelector sel, void*p);
   long onAncestryBtns(      FXObject*o, FXSelector sel, void*p);
   long onActivateMember(    FXObject*o, FXSelector sel, void*p);
+  long onSetTheme(FXObject*sender, FXSelector sel, void*ptr);
+  long onUpdateTheme(FXObject*sender, FXSelector sel, void*ptr);
   enum {
     ID_SELECT_CLASS=FXMainWindow::ID_LAST,
     ID_SELECT_MEMBER,
@@ -194,6 +197,8 @@ public:
     ID_CLEAR_FIELD,
     ID_EDIT_PATHLIST,
     ID_ANCESTRY_BTNS,
+    ID_SET_THEME,
+    ID_UPDATE_THEME,
     ID_LAST
   };
   MainWin(FXApp* a);
