@@ -18,24 +18,9 @@
 
 #include <fx.h>
 #include <fxkeys.h>
+
+#include "ctokens.h"
 #include "styler.h"
-
-
-enum {
-  synNULL=0,   // Reserved, must be first
-  synCODE,     // Default text
-  synKWORD,    // Keywords
-  synMLCOMM,   // Multi-line comments
-  synSLCOMM,   // Single-line comments
-  synCHAR,     // Character constants
-  synSTRING,   // Quoted strings
-  synOPERAT,   // Operators
-  synNUMBER,   // Numbers
-  synSPACE,    // White space
-  synPREPROC,  // Preprocessor directives
-  synEOL,      // New-line character
-  synLAST      // Reserved, must be last
-};
 
 
 static FXColor fgCODE    = FXRGB(0x00,0x00,0x00);
@@ -91,8 +76,8 @@ void Styler::InitStyles()
     Styles[i].selectBackColor=app->getSelbackColor();
     Styles[i].activeBackColor=bgActive;
   }
-  Styles[synCODE].normalForeColor    = fgCODE;
-  Styles[synOPERAT].normalForeColor  = fgCODE;
+  Styles[synNAME].normalForeColor    = fgCODE;
+  Styles[synSYMBOL].normalForeColor  = fgCODE;
   Styles[synKWORD].normalForeColor   = fgKWORD;
   Styles[synMLCOMM].normalForeColor  = fgMLCOMM;
   Styles[synSLCOMM].normalForeColor  = fgSLCOMM;
@@ -100,7 +85,7 @@ void Styler::InitStyles()
   Styles[synSTRING].normalForeColor  = fgSTRING;
   Styles[synNUMBER].normalForeColor  = fgNUMBER;
   Styles[synPREPROC].normalForeColor = fgPREPROC;
-  Styles[synOPERAT].style = FXText::STYLE_BOLD;
+  Styles[synSYMBOL].style = FXText::STYLE_BOLD;
   Styles[synKWORD].style = FXText::STYLE_BOLD;
 }
 
@@ -121,7 +106,7 @@ struct FXHiliteStyle {
 
 
 // List of C++ keywords
-static const char* Keywords[] = {
+static const char* CppKeywords[] = {
   "and",        "and_eq",   "asm",           "auto",      "bitand",    "bitor",
   "bool",       "break",    "case",          "catch",     "char",      "class",
   "compl",      "const",    "const_cast",    "continue",  "default",   "delete",
@@ -138,134 +123,23 @@ static const char* Keywords[] = {
 };
 
 
-// Create the highlighting "map" from the C++ file contents source
+
+
+static int token_callback(const TokenInfo*info)
+{
+  FXuint offset=info->token-info->src;
+  char*dst=(char*)info->user_data;
+  memset(dst+offset,info->type,info->len);
+  return 1;
+}
+
+
+
 void Styler::ParseContents(FXText *viewer, FXString &hilite, const FXString &source)
 {
-  FXuint srclen=source.length();
-  FXuint i=0;
-  hilite.length(srclen);
-  const char*src=source.text();
-  char*dst=hilite.text();
-  memset(dst,0,srclen);
-  while (i<srclen) {
-    switch (src[i]) {
-      case '"': {
-        for (const FXchar*p=src+i+1; p[0]; p++) {
-          if (p[0]=='"') {
-            dst[i]=synSTRING;
-            dst[i+1]=synSTRING;
-            i+=2;
-            break;
-          } else if ((p[0]=='\\')) {
-            dst[i]=synSTRING;
-            dst[i+1]=synSTRING;
-            p++;
-            i++;
-          }
-          dst[i]=synSTRING;
-          i++;
-        }
-        break;
-      }
-      case '\'': {
-        dst[i]=synCHAR;
-        dst[i+1]=synCHAR;
-        dst[i+2]=synCHAR;
-        i+=3;
-        break;
-      }
-      case '/':{
-        if (src[i+1]=='/') {
-          const FXchar*p=strchr(&src[i], '\n');
-          if (!p) { p=strchr(&src[i], '\0'); } // Unterminated comment
-          if (p) {
-            FXint len=(p-&src[i]);
-            memset(dst+i,synSLCOMM,len);
-            i+=len;
-          }
-          break;
-        } else if (src[i+1]=='*') {
-          const FXchar*p=strstr(&src[i]+1, "*/");
-          if (!p) { p=strchr(&src[i], '\0'); } // Unterminated comment
-          if (p) {
-            if (*p) { p+=2; }
-            FXint len=(p-&src[i]);
-            memset(dst+i,synMLCOMM,len);
-            i+=len;
-          }
-          break;
-        } else {
-          dst[i]=synOPERAT;
-          i++;
-          break;
-        }
-      }
-      case '\n': {
-        dst[i]=synEOL;
-        i++;
-        break;
-      }
-      default: {
-        if ((src[i]=='0')&&((src[i+1]=='x')||(src[i+1]=='X'))) {
-          dst[i]=synNUMBER;
-          dst[i+1]=synNUMBER;
-          i+=2;
-          while (Ascii::isHexDigit(src[i])) {
-            dst[i]=synNUMBER;
-            i++;
-          }
-        } else if (Ascii::isDigit(src[i])) {
-          while (Ascii::isDigit(src[i])) {
-            dst[i]=synNUMBER;
-            i++;
-          }
-        } else if (Ascii::isSpace(src[i])) {
-          dst[i]=synSPACE;
-          i++;
-        } else if (Ascii::isLetter(src[i])||(src[i]=='#')||(src[i]=='_')) {
-          dst[i]=synCODE;
-          i++;
-          while (Ascii::isAlphaNumeric(src[i])||(src[i]=='_')) {
-            dst[i]=synCODE;
-            i++;
-          }
-        } else {
-         dst[i]=synOPERAT;
-         i++;
-        }
-      }
-    }
-  }
-  FXchar*p=dst;
-  while (p && *p) {
-    while ((*p==synEOL)||(*p==synSPACE)) { p++; }
-    if (src[p-dst]=='#') {
-      *p=synPREPROC;
-      p++;
-      while (*p==synSPACE) { p++; }
-      while (*p==synCODE) {
-        *p=synPREPROC;
-        p++;
-      }
-    }
-    p=strchr(p,synEOL);
-  }
-  p=strchr(dst,synCODE);
-  while (p) {
-    FXint rem=srclen-(p-dst);
-    for (const FXchar**k=Keywords; *k; k++) {
-      FXint len=strlen(*k);
-      if ((rem>=len)&&(p[len]!=synCODE)) {
-        if (strncmp(*k,src+(p-dst),len)==0) {
-          memset(p,synKWORD,len);
-          p+=len;
-          break;
-        }
-      }
-    }
-    while (*p==synCODE) { p++; }
-    p=strchr(p,synCODE);
-  }
+  hilite.length(source.length());
+  memset(hilite.text(),0,source.length());
+  tokenize(source.text(),token_callback,(void*)hilite.text(),CppKeywords,1);
   viewer->setText(source);
   viewer->setStyled(true);
   viewer->setHiliteStyles(Styles+1);
